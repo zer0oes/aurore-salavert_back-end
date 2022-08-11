@@ -1,0 +1,9 @@
+build:
+  config:
+    NODE_ENV: production
+    DATABASE_URL: $DATABASE_URL
+    WEBSITE_URL: $MY_HEROKU_URL
+    PORT: $PORT
+
+run:
+  web: yarn start
