@@ -36,14 +36,13 @@
     "gallery": {
       "type": "media",
       "multiple": true,
-      "required": false,
+      "required": true,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "private": true
+      ]
     },
     "categories": {
       "type": "relation",
