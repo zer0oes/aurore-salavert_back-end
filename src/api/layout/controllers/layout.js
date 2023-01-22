@@ -1,10 +1,9 @@
 'use strict';
 
 /**
- *  project controller
+ * layout controller
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
-module.exports = createCoreController('api::project.project');
-
+module.exports = createCoreController('api::layout.layout');
