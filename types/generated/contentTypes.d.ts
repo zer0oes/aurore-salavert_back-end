@@ -831,18 +831,13 @@ export interface ApiContactContact extends Schema.SingleType {
     singularName: 'contact';
     pluralName: 'contacts';
     displayName: 'Contact';
-    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    Title: Attribute.String &
-      Attribute.Required &
-      Attribute.DefaultTo<"Let's work together">;
-    Email: Attribute.String &
-      Attribute.Required &
-      Attribute.DefaultTo<'hello@aurore-salavert.fr'>;
+    Title: Attribute.String & Attribute.DefaultTo<"Let's work together">;
+    Email: Attribute.String & Attribute.DefaultTo<'hello@aurore-salavert.fr'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

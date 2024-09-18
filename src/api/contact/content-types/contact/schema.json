@@ -4,8 +4,7 @@
   "info": {
     "singularName": "contact",
     "pluralName": "contacts",
-    "displayName": "Contact",
-    "description": ""
+    "displayName": "Contact"
   },
   "options": {
     "draftAndPublish": true
@@ -14,12 +13,10 @@
   "attributes": {
     "Title": {
       "type": "string",
-      "required": true,
       "default": "Let's work together"
     },
     "Email": {
       "type": "string",
-      "required": true,
       "default": "hello@aurore-salavert.fr"
     }
   }
