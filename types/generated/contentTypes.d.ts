@@ -1073,6 +1073,37 @@ export interface ApiSliderItemSliderItem extends Schema.SingleType {
   };
 }
 
+export interface ApiSocialNetworkSocialNetwork extends Schema.CollectionType {
+  collectionName: 'social_networks';
+  info: {
+    singularName: 'social-network';
+    pluralName: 'social-networks';
+    displayName: 'Social Network';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    icon: Attribute.String;
+    url: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::social-network.social-network',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::social-network.social-network',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -1099,6 +1130,7 @@ declare module '@strapi/types' {
       'api::service.service': ApiServiceService;
       'api::skill.skill': ApiSkillSkill;
       'api::slider-item.slider-item': ApiSliderItemSliderItem;
+      'api::social-network.social-network': ApiSocialNetworkSocialNetwork;
     }
   }
 }
