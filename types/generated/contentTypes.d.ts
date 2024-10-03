@@ -825,12 +825,65 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
   };
 }
 
+export interface ApiCompetenceCompetence extends Schema.SingleType {
+  collectionName: 'competences';
+  info: {
+    singularName: 'competence';
+    pluralName: 'competences';
+    displayName: 'Competence';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    Title: Attribute.String &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    slug: Attribute.UID<'api::competence.competence', 'Title'> &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::competence.competence',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::competence.competence',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    localizations: Attribute.Relation<
+      'api::competence.competence',
+      'oneToMany',
+      'api::competence.competence'
+    >;
+    locale: Attribute.String;
+  };
+}
+
 export interface ApiContactContact extends Schema.SingleType {
   collectionName: 'contacts';
   info: {
     singularName: 'contact';
     pluralName: 'contacts';
     displayName: 'Contact';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -838,6 +891,7 @@ export interface ApiContactContact extends Schema.SingleType {
   attributes: {
     Title: Attribute.String & Attribute.DefaultTo<"Let's work together">;
     Email: Attribute.String & Attribute.DefaultTo<'hello@aurore-salavert.fr'>;
+    slug: Attribute.UID<'api::contact.contact', 'Title'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -885,41 +939,6 @@ export interface ApiLayoutLayout extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::layout.layout',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiPortfolioPortfolio extends Schema.SingleType {
-  collectionName: 'portfolios';
-  info: {
-    singularName: 'portfolio';
-    pluralName: 'portfolios';
-    displayName: 'Portfolio';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    Title: Attribute.String &
-      Attribute.Required &
-      Attribute.DefaultTo<'Creative Showcase'>;
-    Description: Attribute.RichText &
-      Attribute.Required &
-      Attribute.DefaultTo<'Discover my ideas and my graphic touch by watching the projects below'>;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::portfolio.portfolio',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::portfolio.portfolio',
       'oneToOne',
       'admin::user'
     > &
@@ -980,6 +999,7 @@ export interface ApiServiceService extends Schema.SingleType {
     singularName: 'service';
     pluralName: 'services';
     displayName: 'Service';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -988,6 +1008,7 @@ export interface ApiServiceService extends Schema.SingleType {
     Title: Attribute.String;
     Text: Attribute.RichText;
     Gallery: Attribute.Media<'images' | 'files' | 'videos' | 'audios', true>;
+    slug: Attribute.UID<'api::service.service', 'Title'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1003,6 +1024,65 @@ export interface ApiServiceService extends Schema.SingleType {
       'admin::user'
     > &
       Attribute.Private;
+  };
+}
+
+export interface ApiShowcaseShowcase extends Schema.SingleType {
+  collectionName: 'showcases';
+  info: {
+    singularName: 'showcase';
+    pluralName: 'showcases';
+    displayName: 'Showcase';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    Title: Attribute.String &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    slug: Attribute.UID<'api::showcase.showcase', 'Title'> &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    Description: Attribute.Text &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::showcase.showcase',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::showcase.showcase',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    localizations: Attribute.Relation<
+      'api::showcase.showcase',
+      'oneToMany',
+      'api::showcase.showcase'
+    >;
+    locale: Attribute.String;
   };
 }
 
@@ -1118,11 +1198,12 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
       'api::category.category': ApiCategoryCategory;
+      'api::competence.competence': ApiCompetenceCompetence;
       'api::contact.contact': ApiContactContact;
       'api::layout.layout': ApiLayoutLayout;
-      'api::portfolio.portfolio': ApiPortfolioPortfolio;
       'api::project.project': ApiProjectProject;
       'api::service.service': ApiServiceService;
+      'api::showcase.showcase': ApiShowcaseShowcase;
       'api::skill.skill': ApiSkillSkill;
       'api::slider-item.slider-item': ApiSliderItemSliderItem;
       'api::social-network.social-network': ApiSocialNetworkSocialNetwork;
