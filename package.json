@@ -10,17 +10,19 @@
     "strapi": "strapi"
   },
   "dependencies": {
-    "@strapi/strapi": "4.25.6",
-    "@strapi/plugin-users-permissions": "4.25.6",
-    "@strapi/plugin-i18n": "4.25.6",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router-dom": "5.3.4",
-    "styled-components": "5.3.3",
-    "better-sqlite3": "7.4.6",
+    "@strapi/admin": "^5.0.3",
+    "@strapi/content-releases": "^5.0.3",
+    "@strapi/email": "^5.0.3",
+    "@strapi/plugin-users-permissions": "^5.0.3",
+    "@strapi/strapi": "^5.0.3",
+    "better-sqlite3": "^11.3.0",
     "pg": "^8.7.3",
     "pg-connection-string": "^2.5.0",
-    "strapi-plugin-populate-deep": "^0.1.2"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0",
+    "strapi-plugin-populate-deep": "^0.1.2",
+    "styled-components": "^6.0.0"
   },
   "author": {
     "name": "Aurore S."
@@ -29,8 +31,8 @@
     "uuid": "b99fd0ed-4946-403b-89aa-d643fc71cf05"
   },
   "engines": {
-    "node": ">=12.x.x <=16.x.x",
-    "npm": ">=6.0.0"
+    "npm": ">=6.0.0",
+    "node": ">=18.0.0 <=20.x.x"
   },
   "license": "MIT"
 }
