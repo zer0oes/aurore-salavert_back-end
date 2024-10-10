@@ -1,8 +1,14 @@
 module.exports = ({ env }) => ({
     email: {
-        provider: 'YOUR_EMAIL_PROVIDER',
+        provider: 'smtp',
         providerOptions: {
-            // Options for your email provider
+            host: 'ssl0.ovh.net',
+            port: 465,
+            secure: true,
+            auth: {
+                user: 'hello@aurore-salavert.fr',
+                pass: '&xmoBXYXJ5SXQs$i',
+            },
         },
         settings: {
             defaultFrom: 'hello@aurore-salavert.fr',
