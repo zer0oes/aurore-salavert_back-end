@@ -669,6 +669,7 @@ export interface ApiPrivacyPolicyPrivacyPolicy extends Struct.SingleTypeSchema {
     singularName: 'privacy-policy';
     pluralName: 'privacy-policies';
     displayName: 'Privacy policy';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -686,6 +687,12 @@ export interface ApiPrivacyPolicyPrivacyPolicy extends Struct.SingleTypeSchema {
         };
       }>;
     text: Schema.Attribute.Blocks &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    slug: Schema.Attribute.UID<'title'> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;

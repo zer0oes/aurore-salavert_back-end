@@ -4,7 +4,8 @@
   "info": {
     "singularName": "privacy-policy",
     "pluralName": "privacy-policies",
-    "displayName": "Privacy policy"
+    "displayName": "Privacy policy",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -30,6 +31,15 @@
         }
       },
       "type": "blocks"
+    },
+    "slug": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "uid",
+      "targetField": "title"
     }
   }
 }
