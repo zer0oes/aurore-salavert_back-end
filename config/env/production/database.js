@@ -1,14 +1,10 @@
 module.exports = ({ env }) => ({
-  defaultConnection: 'default',
-  connections: {
-    default: {
-      connector: 'bookshelf',
-      settings: {
-        client: 'postgres',
-        connection: env('DATABASE_URL'),
-      },
-      options: {
-        useNullAsDefault: true,
+  connection: {
+    client: 'postgres',
+    connection: {
+      connectionString: env('DATABASE_URL'),
+      ssl: {
+        rejectUnauthorized: env.bool('DATABASE_SSL_SELF', false),
       },
     },
   },
