@@ -1,4 +1,37 @@
-module.exports = ({ env }) => ({
+module.exports = ({ env }) => {
+  const isProduction = env('NODE_ENV', 'development') === 'production';
+  const actionOptions = {
+    upload: {},
+    uploadStream: {},
+    delete: {},
+  };
+
+  const uploadConfig = isProduction
+    ? {
+        provider: 'aws-s3',
+        providerOptions: {
+          s3Options: {
+            credentials: {
+              accessKeyId: env('AWS_ACCESS_KEY_ID'),
+              secretAccessKey: env('AWS_ACCESS_SECRET'),
+            },
+            region: env('AWS_REGION'),
+            params: {
+              Bucket: env('AWS_BUCKET'),
+              ACL: 'private',
+            },
+            signedUrlExpires: env('AWS_SIGNED_URL_EXPIRES', 15 * 60),
+          },
+        },
+        actionOptions,
+      }
+    : {
+        provider: 'local',
+        providerOptions: {},
+        actionOptions,
+      };
+
+  return ({
     email: {
         provider: 'smtp',
         providerOptions: {
@@ -21,27 +54,7 @@ module.exports = ({ env }) => ({
         },
     },
     upload: {
-        config: {
-            provider: 'aws-s3',
-            providerOptions: {
-                s3Options: {
-                    credentials: {
-                        accessKeyId: env('AWS_ACCESS_KEY_ID'),
-                        secretAccessKey: env('AWS_ACCESS_SECRET'),
-                    },
-                    region: env('AWS_REGION'),
-                    params: {
-                        Bucket: env('AWS_BUCKET'),
-                        ACL: 'private',
-                    },
-                    signedUrlExpires: env('AWS_SIGNED_URL_EXPIRES', 15 * 60),
-                },
-            },
-            actionOptions: {
-                upload: {},
-                uploadStream: {},
-                delete: {},
-            },
-        },
+        config: uploadConfig,
     },
-});
+  });
+};

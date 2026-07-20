@@ -1,13 +1,17 @@
+const path = require('path');
+
 module.exports = ({ env }) => ({
   connection: {
-    client: 'postgres',
+    client: 'sqlite',
     connection: {
-      host: env('DATABASE_HOST', 'localhost'),
-      port: env.int('DATABASE_PORT', 5432),
-      database: env('DATABASE_NAME', 'b004_local'),
-      user: env('DATABASE_USERNAME', 'auroresalavert'),
-      password: env('DATABASE_PASSWORD', 'auroresalavertDB'),
-      ssl: false,
+      filename: path.resolve(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        env('DATABASE_FILENAME', '.tmp/data-local.db')
+      ),
     },
+    useNullAsDefault: true,
   },
 });

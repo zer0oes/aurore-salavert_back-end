@@ -7,7 +7,11 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "build": "strapi build",
-    "strapi": "strapi"
+    "strapi": "strapi",
+    "sync:production-content": "node scripts/local-node-runner.js sync-production-projects.js",
+    "sync:production-projects": "npm run sync:production-content",
+    "localize:imported-media": "node scripts/local-node-runner.js localize-imported-media.js",
+    "start:local": "node scripts/local-node-runner.js start-local.js"
   },
   "dependencies": {
     "@strapi/admin": "5.50.2",
