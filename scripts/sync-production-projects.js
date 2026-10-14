@@ -237,6 +237,19 @@ const ensureFrenchLocale = async (strapi) => {
 const synchronize = async (strapi) => {
   await ensureFrenchLocale(strapi);
 
+  const singleTypes = ['showcase', 'competence', 'service', 'contact', 'privacy-policy', 'slider-item'];
+  const productionSingleTypes = await Promise.all(singleTypes.map(async (name) => {
+    const uid = `api::${name}.${name}`;
+    const schema = strapi.contentTypes[uid];
+    const locales = schema.pluginOptions?.i18n?.localized ? LOCALES : [null];
+    const entries = await Promise.all(locales.map(async (locale) => {
+      const response = await fetchJson(`${PRODUCTION_API}/${name}?populate=*${locale ? `&locale=${locale}` : ''}`);
+      if (!response.data) throw new Error(`Missing production content: ${name}/${locale || 'default'}`);
+      return response.data;
+    }));
+    return { name, uid, schema, entries };
+  }));
+
   const [projects, productionCategories, productionLayouts, skills, socialNetworks] =
     await Promise.all([
       fetchProductionCollection('projects'),
@@ -262,9 +275,11 @@ const synchronize = async (strapi) => {
 
   const projectsWithRemoteMedia = localProjects.filter(
     (project) =>
-      project.thumbnail?.provider !== 'local' ||
+      (project.thumbnail && project.thumbnail.provider !== 'local') ||
       project.gallery?.some((media) => media.provider !== 'local')
   );
+  const publishedProjects = await projectRepository.findMany({ locale: '*', status: 'published' });
+  const publishedProjectLocales = new Set(publishedProjects.map((project) => `${project.documentId}:${project.locale}`));
 
   for (const project of projectsWithRemoteMedia) {
     const thumbnail = await mediaImporter.ensureLocalMedia(project.thumbnail);
@@ -277,7 +292,7 @@ const synchronize = async (strapi) => {
     await projectRepository.update({
       documentId: project.documentId,
       locale: project.locale,
-      status: 'published',
+      status: publishedProjectLocales.has(`${project.documentId}:${project.locale}`) ? 'published' : 'draft',
       data: {
         thumbnail: thumbnail?.id || null,
         gallery: gallery.map((media) => media.id),
@@ -289,6 +304,10 @@ const synchronize = async (strapi) => {
     [
       ...projects.flatMap((project) => [project.thumbnail, ...(project.gallery || [])]),
       ...skills.map((skill) => skill.icon),
+      ...productionSingleTypes.flatMap(({ schema, entries }) => entries.flatMap((entry) =>
+        Object.entries(schema.attributes).filter(([, attribute]) => attribute.type === 'media')
+          .flatMap(([field]) => Array.isArray(entry[field]) ? entry[field] : [entry[field]])
+      )),
     ],
     (media) => media.hash
   );
@@ -299,6 +318,33 @@ const synchronize = async (strapi) => {
     const imported = await mediaImporter.ensureLocalMedia(source);
     mediaMapping.set(source.hash, imported);
     console.log(`[media ${index + 1}/${productionMedia.length}] ${source.name}`);
+  }
+
+  for (const { name, uid, schema, entries } of productionSingleTypes) {
+    const repository = strapi.documents(uid);
+    const existingEntries = await repository.findMany({ status: 'draft', ...(schema.pluginOptions?.i18n?.localized ? { locale: '*' } : {}) });
+    const existing = existingEntries[0];
+    let documentId = existing?.documentId;
+    for (const entry of entries) {
+      const data = {};
+      for (const [field, attribute] of Object.entries(schema.attributes)) {
+        if (['relation', 'component', 'dynamiczone'].includes(attribute.type) || !Object.hasOwn(entry, field)) continue;
+        if (attribute.type === 'media') {
+          const media = entry[field];
+          data[field] = attribute.multiple
+            ? (media || []).map((file) => mediaMapping.get(file.hash).id)
+            : media ? mediaMapping.get(media.hash).id : null;
+        } else {
+          data[field] = entry[field];
+        }
+      }
+      const options = { status: 'published', data, ...(entry.locale ? { locale: entry.locale } : {}) };
+      const saved = documentId
+        ? await repository.update({ documentId, ...options })
+        : await repository.create(options);
+      documentId = saved.documentId;
+      console.log(`[${name} ${entry.locale || 'default'}] published`);
+    }
   }
 
   const uniqueProductionCategories = uniqueBy(
@@ -423,6 +469,12 @@ const synchronize = async (strapi) => {
         : await projectRepository.create(options);
 
       localDocumentId = saved.documentId;
+      // Keep the source date on both draft and published rows: the portfolio
+      // sorts by createdAt, which would otherwise reflect the import order.
+      await strapi.db.query('api::project.project').updateMany({
+        where: { documentId: localDocumentId, locale: project.locale },
+        data: { createdAt: project.createdAt },
+      });
       console.log(`[project ${project.locale}] ${project.slug}`);
     }
   }
@@ -443,7 +495,7 @@ const synchronize = async (strapi) => {
       await projectRepository.update({
         documentId: source.documentId,
         locale,
-        status: 'published',
+        status: 'draft',
         data: {
           slug: source.slug,
           title: source.title,
@@ -459,6 +511,7 @@ const synchronize = async (strapi) => {
 
   return {
     importedProductionProjects: projectGroups.size,
+    importedProductionSingleTypes: productionSingleTypes.length,
     importedProductionLocales: projects.length,
     importedProductionCategories: byDocumentId(uniqueProductionCategories).size,
     importedProductionCategoryLocales: uniqueProductionCategories.length,
