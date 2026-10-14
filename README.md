@@ -49,6 +49,28 @@ Cette commande construit l'interface d'administration Strapi. Pour démarrer ens
 npm run start:local
 ```
 
+## Prévisualisation des projets
+
+La [Preview de Strapi](https://docs.strapi.io/cms/features/preview) ouvre directement `/project/:slug` dans le portfolio Angular, avec la version enregistrée (`draft` ou `published`) et la langue choisies dans l'administration. Enregistrer les modifications avant d'ouvrir la preview.
+
+`npm run start:local` active automatiquement la preview vers `http://127.0.0.1:4200` et génère un secret temporaire à chaque démarrage. Démarrer également le portfolio avec `npm run start:local` dans le dossier front-end.
+
+Pour un lancement classique ou en production, définir dans l'environnement **du back-end uniquement** :
+
+```dotenv
+PREVIEW_URL=https://www.aurore-salavert.fr
+PREVIEW_SECRET=<secret-aleatoire-de-32-octets-minimum>
+```
+
+`PREVIEW_URL` est l'origine du portfolio, sans `/preview` ni `/project`. Générer un secret avec `node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"`. Redémarrer Strapi après modification. Le front-end modifié doit être déployé également.
+
+Seuls les projets avec un slug proposent une preview. Strapi crée un lien signé valable 30 minutes, limité au document, au statut et à la langue sélectionnés. Le secret reste dans Strapi ; aucun jeton API n'est inclus dans le bundle Angular. L'endpoint `/api/project-preview?token=...` vérifie la signature et l'expiration avant de lire le document et ses médias, catégories et layout. Les réponses ne sont pas mises en cache. Ne pas partager les liens de preview : ils donnent accès à cette version du projet pendant leur validité.
+
+Le portfolio affiche un indicateur de prévisualisation, désactive la navigation vers les autres projets et demande aux robots de ne pas indexer la page. Un lien invalide ou expiré affiche un message invitant à rouvrir la preview depuis Strapi. Il s'agit de la version enregistrée, sans actualisation automatique des modifications non sauvegardées.
+
+Strapi autorise automatiquement l'origine du portfolio dans sa CSP. Si un proxy ajoute des en-têtes `X-Frame-Options` ou `frame-ancestors` au portfolio, autoriser l'origine de l'administration pour l'affichage intégré.
+
+Validation : `node --test tests/preview.test.js`, compilation Angular, puis ouvrir un brouillon et une version publiée en français et en anglais depuis l'administration.
 ## Commandes utiles
 
 ```bash
