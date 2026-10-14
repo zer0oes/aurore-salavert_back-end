@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const { randomBytes } = require('node:crypto');
 const { createStrapi } = require('@strapi/core');
 
 const appDir = path.resolve(__dirname, '..');
@@ -15,6 +16,8 @@ process.env.ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'local-admin-jwt-
 process.env.API_TOKEN_SALT = process.env.API_TOKEN_SALT || 'local-api-token-salt';
 process.env.TRANSFER_TOKEN_SALT = process.env.TRANSFER_TOKEN_SALT || 'local-transfer-token-salt';
 process.env.ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'local-encryption-key-32-characters';
+process.env.PREVIEW_URL = process.env.PREVIEW_URL || 'http://127.0.0.1:4200';
+process.env.PREVIEW_SECRET = process.env.PREVIEW_SECRET || randomBytes(32).toString('hex');
 
 const strapi = createStrapi({ appDir, distDir: appDir, autoReload: false });
 

@@ -49,27 +49,28 @@ Cette commande construit l'interface d'administration Strapi. Pour démarrer ens
 npm run start:local
 ```
 
-## Prévisualisation des contenus
+## Prévisualisation des projets
 
-Strapi 5.52.3, déjà installé, inclut la fonctionnalité [Preview](https://docs.strapi.io/cms/features/preview) : aucune mise à jour de dépendance n'est nécessaire.
+La [Preview de Strapi](https://docs.strapi.io/cms/features/preview) ouvre directement `/project/:slug` dans le portfolio Angular, avec la version enregistrée (`draft` ou `published`) et la langue choisies dans l'administration. Enregistrer les modifications avant d'ouvrir la preview.
 
-La configuration back-end est prête mais reste désactivée tant que `PREVIEW_URL` et `PREVIEW_SECRET` ne sont pas renseignés. Le front-end doit encore implémenter la route correspondante avant de les configurer. Exemple local :
+`npm run start:local` active automatiquement la preview vers `http://127.0.0.1:4200` et génère un secret temporaire à chaque démarrage. Démarrer également le portfolio avec `npm run start:local` dans le dossier front-end.
+
+Pour un lancement classique ou en production, définir dans l'environnement **du back-end uniquement** :
 
 ```dotenv
-PREVIEW_URL=http://127.0.0.1:4200/preview
-PREVIEW_SECRET=<secret-aleatoire-partage-avec-le-serveur-front-end>
+PREVIEW_URL=https://www.aurore-salavert.fr
+PREVIEW_SECRET=<secret-aleatoire-de-32-octets-minimum>
 ```
 
-En production, utiliser une route HTTPS, par exemple `https://www.aurore-salavert.fr/preview`, et un secret distinct. Redémarrer Strapi après modification. L'origine de cette URL est autorisée automatiquement dans la politique CSP de l'administration pour afficher la prévisualisation intégrée.
+`PREVIEW_URL` est l'origine du portfolio, sans `/preview` ni `/project`. Générer un secret avec `node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"`. Redémarrer Strapi après modification. Le front-end modifié doit être déployé également.
 
-Le bouton Preview transmet à cette route les paramètres `secret`, `uid` (par exemple `api::project.project`), `documentId`, `status` (`draft` ou `published`), `locale` si disponible et `slug` si le document en possède un. Les contenus introuvables et les types internes à Strapi n'ont pas de lien Preview. Les différents types de contenus sont dirigés vers ce point d'entrée unique : le front-end choisit ensuite la page ou la section à afficher selon `uid` et `slug`.
+Seuls les projets avec un slug proposent une preview. Strapi crée un lien signé valable 30 minutes, limité au document, au statut et à la langue sélectionnés. Le secret reste dans Strapi ; aucun jeton API n'est inclus dans le bundle Angular. L'endpoint `/api/project-preview?token=...` vérifie la signature et l'expiration avant de lire le document et ses médias, catégories et layout. Les réponses ne sont pas mises en cache. Ne pas partager les liens de preview : ils donnent accès à cette version du projet pendant leur validité.
 
-La route front-end doit vérifier le secret côté serveur, valider les paramètres, puis lire le document Strapi avec le statut et la langue demandés. L'accès aux brouillons doit utiliser un jeton Strapi conservé côté serveur avec les permissions de lecture nécessaires ; ne pas ouvrir leur accès au rôle Public. Ne jamais inclure ce jeton ou le secret dans le bundle navigateur. Après validation, établir une session de prévisualisation et rediriger vers une URL sans secret ; éviter de journaliser la chaîne de requête.
+Le portfolio affiche un indicateur de prévisualisation, désactive la navigation vers les autres projets et demande aux robots de ne pas indexer la page. Un lien invalide ou expiré affiche un message invitant à rouvrir la preview depuis Strapi. Il s'agit de la version enregistrée, sans actualisation automatique des modifications non sauvegardées.
 
-Le front-end doit également autoriser son affichage en iframe depuis l'origine de l'administration Strapi (`Content-Security-Policy: frame-ancestors ...`, sans `X-Frame-Options` incompatible). Vérifier ensuite un projet brouillon, sa version publiée et une autre langue depuis l'administration. Tant que cette route n'existe pas, la prévisualisation de bout en bout n'est pas disponible.
+Strapi autorise automatiquement l'origine du portfolio dans sa CSP. Si un proxy ajoute des en-têtes `X-Frame-Options` ou `frame-ancestors` au portfolio, autoriser l'origine de l'administration pour l'affichage intégré.
 
-Vérifier la génération des liens avec `node --test tests/preview.test.js`.
-
+Validation : `node --test tests/preview.test.js`, compilation Angular, puis ouvrir un brouillon et une version publiée en français et en anglais depuis l'administration.
 ## Commandes utiles
 
 ```bash
