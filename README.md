@@ -49,6 +49,27 @@ Cette commande construit l'interface d'administration Strapi. Pour démarrer ens
 npm run start:local
 ```
 
+## Prévisualisation des contenus
+
+Strapi 5.52.3, déjà installé, inclut la fonctionnalité [Preview](https://docs.strapi.io/cms/features/preview) : aucune mise à jour de dépendance n'est nécessaire.
+
+La configuration back-end est prête mais reste désactivée tant que `PREVIEW_URL` et `PREVIEW_SECRET` ne sont pas renseignés. Le front-end doit encore implémenter la route correspondante avant de les configurer. Exemple local :
+
+```dotenv
+PREVIEW_URL=http://127.0.0.1:4200/preview
+PREVIEW_SECRET=<secret-aleatoire-partage-avec-le-serveur-front-end>
+```
+
+En production, utiliser une route HTTPS, par exemple `https://www.aurore-salavert.fr/preview`, et un secret distinct. Redémarrer Strapi après modification. L'origine de cette URL est autorisée automatiquement dans la politique CSP de l'administration pour afficher la prévisualisation intégrée.
+
+Le bouton Preview transmet à cette route les paramètres `secret`, `uid` (par exemple `api::project.project`), `documentId`, `status` (`draft` ou `published`), `locale` si disponible et `slug` si le document en possède un. Les contenus introuvables et les types internes à Strapi n'ont pas de lien Preview. Les différents types de contenus sont dirigés vers ce point d'entrée unique : le front-end choisit ensuite la page ou la section à afficher selon `uid` et `slug`.
+
+La route front-end doit vérifier le secret côté serveur, valider les paramètres, puis lire le document Strapi avec le statut et la langue demandés. L'accès aux brouillons doit utiliser un jeton Strapi conservé côté serveur avec les permissions de lecture nécessaires ; ne pas ouvrir leur accès au rôle Public. Ne jamais inclure ce jeton ou le secret dans le bundle navigateur. Après validation, établir une session de prévisualisation et rediriger vers une URL sans secret ; éviter de journaliser la chaîne de requête.
+
+Le front-end doit également autoriser son affichage en iframe depuis l'origine de l'administration Strapi (`Content-Security-Policy: frame-ancestors ...`, sans `X-Frame-Options` incompatible). Vérifier ensuite un projet brouillon, sa version publiée et une autre langue depuis l'administration. Tant que cette route n'existe pas, la prévisualisation de bout en bout n'est pas disponible.
+
+Vérifier la génération des liens avec `node --test tests/preview.test.js`.
+
 ## Commandes utiles
 
 ```bash
