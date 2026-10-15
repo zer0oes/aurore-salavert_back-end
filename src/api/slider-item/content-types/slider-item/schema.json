@@ -11,15 +11,14 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "Gallery": {
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ],
-      "type": "media",
-      "multiple": true
+    "Title": {
+      "type": "string",
+      "default": "Slider d’accueil"
+    },
+    "Slides": {
+      "type": "component",
+      "component": "slider.slide",
+      "repeatable": true
     }
   }
 }

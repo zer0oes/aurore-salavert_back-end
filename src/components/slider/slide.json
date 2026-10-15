@@ -1,0 +1,55 @@
+{
+  "collectionName": "components_slider_slides",
+  "info": {
+    "displayName": "Slide",
+    "icon": "landscape"
+  },
+  "options": {},
+  "attributes": {
+    "Image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "Accroche": {
+      "type": "blocks"
+    },
+    "Project": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::project.project"
+    },
+    "Position": {
+      "type": "enumeration",
+      "required": true,
+      "default": "bottom-left",
+      "enum": [
+        "top-left",
+        "top-center",
+        "top-right",
+        "center-left",
+        "center",
+        "center-right",
+        "bottom-left",
+        "bottom-center",
+        "bottom-right"
+      ]
+    },
+    "Theme": {
+      "type": "enumeration",
+      "required": true,
+      "default": "light",
+      "enum": [
+        "light",
+        "dark"
+      ]
+    }
+  },
+  "config": {}
+}
