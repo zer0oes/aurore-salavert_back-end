@@ -2,7 +2,6 @@
 
 const path = require('path');
 const { randomBytes } = require('node:crypto');
-const { createStrapi } = require('@strapi/core');
 
 const appDir = path.resolve(__dirname, '..');
 
@@ -19,25 +18,13 @@ process.env.ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'local-encryption-key
 process.env.PREVIEW_URL = process.env.PREVIEW_URL || 'http://127.0.0.1:4200';
 process.env.PREVIEW_SECRET = process.env.PREVIEW_SECRET || randomBytes(32).toString('hex');
 
-const strapi = createStrapi({ appDir, distDir: appDir, autoReload: false });
-
 console.log('[LOCAL] SQLite database: .tmp/data-local.db');
 console.log('[LOCAL] Media storage: public/uploads');
 console.log('[LOCAL] Production database and S3 writes are disabled.');
 
-strapi.config.set('database.connection', {
-  client: 'sqlite',
-  connection: { filename: path.resolve(appDir, process.env.DATABASE_FILENAME) },
-  useNullAsDefault: true,
-});
-
-(async () => {
-  try {
-    await strapi.load();
-    await strapi.listen();
-  } catch (error) {
-    console.error(error);
-    await strapi.destroy();
-    process.exit(1);
-  }
-})();
+// Use Strapi's development lifecycle: the Content-Type Builder requires
+// autoReload and its worker supervisor to save schemas and restart the server.
+process.chdir(appDir);
+const strapiCli = path.join(path.dirname(require.resolve('@strapi/strapi/package.json')), 'bin', 'strapi.js');
+process.argv = [process.execPath, strapiCli, 'develop', '--no-install-deps'];
+require(strapiCli);

@@ -41,6 +41,21 @@ module.exports = {
       return;
     }
 
+    const sliderUid = 'api::slider-item.slider-item';
+    const contentTypes = strapi.plugin('content-manager').service('content-types');
+    const sliderType = strapi.contentTypes[sliderUid];
+    const sliderConfiguration = await contentTypes.findConfiguration(sliderType);
+    if (sliderConfiguration.settings.mainField !== 'Title') {
+      await contentTypes.updateConfiguration(sliderType, {
+        ...sliderConfiguration,
+        settings: { ...sliderConfiguration.settings, mainField: 'Title' },
+      });
+    }
+    await strapi.db.query(sliderUid).updateMany({
+      where: { $or: [{ Title: { $null: true } }, { Title: '' }] },
+      data: { Title: 'Slider d’accueil' },
+    });
+
     const roleRepository = strapi.db.query('plugin::users-permissions.role');
     const permissionRepository = strapi.db.query('plugin::users-permissions.permission');
     const publicRole = await roleRepository.findOne({
