@@ -1,0 +1,6 @@
+{
+  "name": "site-analytics",
+  "version": "1.0.0",
+  "private": true,
+  "strapi": { "kind": "plugin", "name": "site-analytics", "displayName": "Statistiques" }
+}

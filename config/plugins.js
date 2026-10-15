@@ -32,6 +32,10 @@ module.exports = ({ env }) => {
       };
 
   return ({
+    'site-analytics': {
+      enabled: true,
+      resolve: './src/plugins/site-analytics',
+    },
     email: {
         provider: 'smtp',
         providerOptions: {
