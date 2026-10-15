@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "Title": "Slider d’accueil",
+  "Slides": [
+    {
+      "Image": {
+        "hash": "02_zer0oes_gfx_responsive_showcase_56780128cb",
+        "name": "02_zer0oes-gfx-responsive-showcase.jpg",
+        "mime": "image/jpeg",
+        "width": 2000,
+        "height": 1333
+      },
+      "Accroche": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "text": "Des identités visuelles sur mesure pour les créateurs de contenu."
+            }
+          ]
+        }
+      ],
+      "Project": {
+        "slug": "zer0oes-gfx",
+        "locale": "en"
+      },
+      "Position": "bottom-center",
+      "Theme": "light"
+    },
+    {
+      "Image": {
+        "hash": "Freecaster_Carte_de_visite_b46b9c8bb1",
+        "name": "Freecaster_-_Carte_de_visite.jpg",
+        "mime": "image/jpeg",
+        "width": 2000,
+        "height": 1500
+      },
+      "Accroche": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "text": "Une identité déclinée jusque dans les premiers échanges."
+            }
+          ]
+        }
+      ],
+      "Project": {
+        "slug": "freecaster",
+        "locale": "en"
+      },
+      "Position": "bottom-left",
+      "Theme": "light"
+    },
+    {
+      "Image": {
+        "hash": "Move_On_Brochure_A4_couverture_a60f1b4664",
+        "name": "Move_On_-_Brochure_A4_couverture.jpg",
+        "mime": "image/jpeg",
+        "width": 2000,
+        "height": 1400
+      },
+      "Accroche": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "text": "Une brochure pour présenter l’offre et donner envie d’avancer."
+            }
+          ]
+        }
+      ],
+      "Project": {
+        "slug": "move-on",
+        "locale": "en"
+      },
+      "Position": "bottom-right",
+      "Theme": "dark"
+    },
+    {
+      "Image": {
+        "hash": "Capcho_Sac_plastique_ac5a4366f9",
+        "name": "Capcho_-_Sac_plastique.jpg",
+        "mime": "image/jpeg",
+        "width": 2000,
+        "height": 1325
+      },
+      "Accroche": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "text": "L’univers de la marque, jusque dans les sacs de sa boutique."
+            }
+          ]
+        }
+      ],
+      "Project": {
+        "slug": "capcho",
+        "locale": "en"
+      },
+      "Position": "bottom-right",
+      "Theme": "dark"
+    }
+  ]
+}
