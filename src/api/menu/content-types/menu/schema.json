@@ -1,0 +1,34 @@
+{
+  "kind": "singleType",
+  "collectionName": "menus",
+  "info": {
+    "singularName": "menu",
+    "pluralName": "menus",
+    "displayName": "Menu",
+    "description": "Libellés de navigation, indépendants des titres des sections."
+  },
+  "options": { "draftAndPublish": true },
+  "pluginOptions": { "i18n": { "localized": true } },
+  "attributes": {
+    "HomeLabel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "ShowcaseLabel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "SkillsLabel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "ServicesLabel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "ContactLabel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    }
+  }
+}

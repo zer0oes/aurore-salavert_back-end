@@ -625,6 +625,65 @@ export interface ApiLayoutLayout extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiMenuMenu extends Struct.SingleTypeSchema {
+  collectionName: 'menus';
+  info: {
+    description: 'Libell\u00E9s de navigation, ind\u00E9pendants des titres des sections.';
+    displayName: 'Menu';
+    pluralName: 'menus';
+    singularName: 'menu';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    ContactLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    HomeLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::menu.menu'>;
+    publishedAt: Schema.Attribute.DateTime;
+    ServicesLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    ShowcaseLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    SkillsLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiPrivacyPolicyPrivacyPolicy extends Struct.SingleTypeSchema {
   collectionName: 'privacy_policies';
   info: {
@@ -1476,6 +1535,7 @@ declare module '@strapi/strapi' {
       'api::competence.competence': ApiCompetenceCompetence;
       'api::contact.contact': ApiContactContact;
       'api::layout.layout': ApiLayoutLayout;
+      'api::menu.menu': ApiMenuMenu;
       'api::privacy-policy.privacy-policy': ApiPrivacyPolicyPrivacyPolicy;
       'api::project.project': ApiProjectProject;
       'api::service.service': ApiServiceService;
