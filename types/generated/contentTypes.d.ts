@@ -595,6 +595,68 @@ export interface ApiContactContact extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiCookieBannerCookieBanner extends Struct.SingleTypeSchema {
+  collectionName: 'cookie_banners';
+  info: {
+    description: 'Textes du bandeau de consentement aux cookies et du lien \u00AB G\u00E9rer les cookies \u00BB.';
+    displayName: 'Cookie banner';
+    pluralName: 'cookie-banners';
+    singularName: 'cookie-banner';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    AcceptLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::cookie-banner.cookie-banner'
+    >;
+    ManageLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    Message: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    PolicyLinkLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    RejectLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiLayoutLayout extends Struct.CollectionTypeSchema {
   collectionName: 'layouts';
   info: {
@@ -1534,6 +1596,7 @@ declare module '@strapi/strapi' {
       'api::category.category': ApiCategoryCategory;
       'api::competence.competence': ApiCompetenceCompetence;
       'api::contact.contact': ApiContactContact;
+      'api::cookie-banner.cookie-banner': ApiCookieBannerCookieBanner;
       'api::layout.layout': ApiLayoutLayout;
       'api::menu.menu': ApiMenuMenu;
       'api::privacy-policy.privacy-policy': ApiPrivacyPolicyPrivacyPolicy;

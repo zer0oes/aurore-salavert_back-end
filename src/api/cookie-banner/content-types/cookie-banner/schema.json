@@ -1,0 +1,34 @@
+{
+  "kind": "singleType",
+  "collectionName": "cookie_banners",
+  "info": {
+    "singularName": "cookie-banner",
+    "pluralName": "cookie-banners",
+    "displayName": "Cookie banner",
+    "description": "Textes du bandeau de consentement aux cookies et du lien « Gérer les cookies »."
+  },
+  "options": { "draftAndPublish": true },
+  "pluginOptions": { "i18n": { "localized": true } },
+  "attributes": {
+    "Message": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "PolicyLinkLabel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "AcceptLabel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "RejectLabel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "ManageLabel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    }
+  }
+}
