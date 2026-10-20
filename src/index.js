@@ -37,6 +37,19 @@ module.exports = {
    * run jobs, or perform some special logic.
    */
   async bootstrap({ strapi }) {
+    // Navigation labels are public content; expose only their read action.
+    const menuPublicRole = await strapi.db.query('plugin::users-permissions.role').findOne({
+      where: { type: 'public' },
+    });
+    if (menuPublicRole) {
+      const permissions = strapi.db.query('plugin::users-permissions.permission');
+      const action = 'api::menu.menu.find';
+      const existing = await permissions.findOne({ where: { action, role: menuPublicRole.id } });
+      if (!existing) {
+        await permissions.create({ data: { action, role: menuPublicRole.id } });
+      }
+    }
+
     if (process.env.NODE_ENV === 'production') {
       return;
     }
