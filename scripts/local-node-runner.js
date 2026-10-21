@@ -17,10 +17,7 @@ if (!allowedScripts.has(requestedScript)) {
   process.exit(1);
 }
 
-// Strapi 5.5x uses Array.prototype.toSorted (added in Node 20), so any
-// runtime older than that will crash at bootstrap even if better-sqlite3
-// loads fine on it.
-const MIN_NODE_MAJOR = 20;
+// Strapi 5.59 uses undici 8, which requires Node >=22.19.
 
 const windowsHerokuNode = 'C:\\Program Files\\heroku\\client\\bin\\node.exe';
 
@@ -69,24 +66,19 @@ const supportsLocalSqlite = (nodeBinary) => {
   return check.status === 0;
 };
 
-// Prefer a runtime that satisfies both constraints (Strapi + better-sqlite3).
-// Fall back to any working better-sqlite3 runtime, with a warning, so the
-// script still runs on setups without a >=20 Node install.
-const nodeBinary =
-  candidates.find((candidate) => {
-    const major = nodeMajor(candidate);
-    return (major === null || major >= MIN_NODE_MAJOR) && supportsLocalSqlite(candidate);
-  }) || candidates.find(supportsLocalSqlite);
+// Check the executable itself, including paths without an embedded version.
+const nodeBinary = candidates.find((candidate) => {
+  const version = spawnSync(candidate, ['--version'], { encoding: 'utf8' });
+  const match = /^v(\d+)\.(\d+)\./.exec(version.stdout || '');
+  const major = Number(match?.[1]);
+  const minor = Number(match?.[2]);
+  return (major > 22 || (major === 22 && minor >= 19)) && supportsLocalSqlite(candidate);
+});
 
 if (!nodeBinary) {
   console.error('[LOCAL] No compatible Node runtime was found.');
   console.error('[LOCAL] Install the project Node version, run npm install, or set LOCAL_NODE_BINARY.');
   process.exit(1);
-}
-
-if (nodeMajor(nodeBinary) !== null && nodeMajor(nodeBinary) < MIN_NODE_MAJOR) {
-  console.warn(`[LOCAL] Warning: only Node < ${MIN_NODE_MAJOR} is available; Strapi may fail to start.`);
-  console.warn('[LOCAL] Install a newer Node version with nvm (e.g. `nvm install 22`).');
 }
 
 const version = spawnSync(nodeBinary, ['--version'], { encoding: 'utf8' }).stdout.trim();
